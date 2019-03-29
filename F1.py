@@ -1,7 +1,7 @@
 import sqlite3
 
 class Help:
-    def new_base():
+    def new_base(self):
         conn = sqlite3.connect('./files/base.db')
         
         cur = conn.cursor()
@@ -34,7 +34,7 @@ class Help:
         conn.close()
         
         
-    def exists(user_name, password_hash):
+    def exists(self, user_name, password_hash):
         conn = sqlite3.connect('./files/base.db')
         
         cur = conn.cursor() 
@@ -49,13 +49,13 @@ class Help:
         return (True, row[0]) if row else (False,)
     
     
-    def watch(user_name, password_hash):
+    def watch(self, user_name, password_hash):
         
-        if exists(user_name, password_hash)[0]:
+        if Help.exists(self, user_name, password_hash)[0]:
             conn = sqlite3.connect('./files/base.db')
             cur = conn.cursor()
             cur.execute("SELECT * FROM info WHERE l_id = ?",
-                           str(exists(user_name, password_hash)[1]))
+                           str(Help.exists(self, user_name, password_hash)[1]))
             row = cur.fetchall()
             cur.close()
             conn.close()  
@@ -63,33 +63,33 @@ class Help:
         
         
         
-    def open_s(user_name, password_hash, subj):
-        if exists(user_name, password_hash)[0]:
+    def open_s(self, user_name, password_hash, subj):
+        if Help.exists(self, user_name, password_hash)[0]:
             conn = sqlite3.connect('./files/base.db')
             
             cur = conn.cursor()
             cur.execute("SELECT * FROM info WHERE l_id = ? AND name = ?",
-                           (str(exists(user_name, password_hash)[1]), subj))
+                           (str(Help.exists(self, user_name, password_hash)[1]), subj))
             row = cur.fetchall()
             cur.close()
             conn.close()  
             return row    
     
     
-    def add(user_name, password_hash, path, text, name, description):
-        if exists(user_name, password_hash)[0]:
+    def add(self, user_name, password_hash, path, text, name, description):
+        if Help.exists(self, user_name, password_hash)[0]:
             conn = sqlite3.connect('./files/base.db')
             
             cur = conn.cursor()
-            cur.execute(''' INSERT INTO info VALUES ({}, '{}', '{}', '{}', '{}') '''.format(str(exists(user_name, password_hash)[1]), path, text, name, description))
+            cur.execute(''' INSERT INTO info VALUES ({}, '{}', '{}', '{}', '{}') '''.format(str(Help.exists(self, user_name, password_hash)[1]), path, text, name, description))
             conn.commit()
             cur.close()
             conn.close()
-            print(watch(user_name, password_hash))
+            print(Help.watch(self, user_name, password_hash))
     
     
-    def delete(user_name, password_hash, name):
-        if exists(user_name, password_hash)[0]:
+    def delete(self, user_name, password_hash, name):
+        if Help.exists(self, user_name, password_hash)[0]:
             conn = sqlite3.connect('./files/base.db')
             
             cur = conn.cursor()
@@ -97,4 +97,4 @@ class Help:
             conn.commit()
             cur.close()
             conn.close()
-            print(watch(user_name, password_hash))
+            print(Help.watch(self, user_name, password_hash))
